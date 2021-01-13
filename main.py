@@ -44,6 +44,11 @@ class Player(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
 
+    def shoot(self):
+        bullet = Bullet(self.rect.centerx, self.rect.top)
+        all_sprites.add(bullet)
+        bullets.add(bullet)
+
 
 class Mob(pygame.sprite.Sprite):
     def __init__(self):
@@ -65,9 +70,27 @@ class Mob(pygame.sprite.Sprite):
             self.speedy = random.randrange(1, 8)
 
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((10, 20))
+        self.image.fill(YELLOW)
+        self.rect = self.image.get_rect()
+        self.rect.bottom = y
+        self.rect.centerx = x
+        self.speedy = -10
+
+    def update(self):
+        self.rect.y += self.speedy
+        # убить, если он заходит за верхнюю часть экрана
+        if self.rect.bottom < 0:
+            self.kill()
+
+
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
 player = Player()
+bullets = pygame.sprite.Group()
 all_sprites.add(player)
 for i in range(8):
     m = Mob()
@@ -79,14 +102,27 @@ running = True
 while running:
     # удерживаем цикл на правильной скорости
     clock.tick(FPS)
-    # Ввод процесса (события)
     for event in pygame.event.get():
         # проверка для закрытия окна
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                player.shoot()
 
     # обновление
     all_sprites.update()
+
+    hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
+    for hit in hits:
+        m = Mob()
+        all_sprites.add(m)
+        mobs.add(m)
+
+    # проверка, не ударил ли моб игрока
+    hits = pygame.sprite.spritecollide(player, mobs, False)
+    if hits:
+        running = False
 
     # рендеринг
     screen.fill(BLACK)
