@@ -52,6 +52,23 @@ def draw_shield_bar(surf, x, y, pct):
     pygame.draw.rect(surf, WHITE, outline_rect, 2)
 
 
+def show_go_screen():
+    screen.blit(background, background_rect)
+    draw_text(screen, "Space difficulties", 64, WIDTH / 2, HEIGHT / 4)
+    draw_text(screen, "Left and right arrows to move, Space to fire", 22,
+              WIDTH / 2, HEIGHT / 2)
+    draw_text(screen, "Press any key to begin", 18, WIDTH / 2, HEIGHT * 3 / 4)
+    pygame.display.flip()
+    waiting = True
+    while waiting:
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYUP:
+                waiting = False
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -192,7 +209,7 @@ class Explosion(pygame.sprite.Sprite):
 # загрузка всей игровой графики
 background = pygame.image.load(path.join(img_dir, "background.png")).convert()
 background_rect = background.get_rect()
-player_img = pygame.image.load(path.join(img_dir, "playerShip3_orange.png")).convert()
+player_img = pygame.image.load(path.join(img_dir, "playerShip1_blue.png")).convert()
 meteor_img = pygame.image.load(path.join(img_dir, "meteorBrown_med1.png")).convert()
 bullet_img = pygame.image.load(path.join(img_dir, "laserRed05.png")).convert()
 meteor_images = []
@@ -227,9 +244,22 @@ for i in range(8):
     newmob()
 score = 0
 
-# цикл игры
+# Цикл игры
+game_over = True
 running = True
 while running:
+    if game_over:
+        show_go_screen()
+        game_over = False
+        all_sprites = pygame.sprite.Group()
+        mobs = pygame.sprite.Group()
+        bullets = pygame.sprite.Group()
+        powerups = pygame.sprite.Group()
+        player = Player()
+        all_sprites.add(player)
+        for i in range(8):
+            newmob()
+        score = 0
     # удерживаем цикл на правильной скорости
     clock.tick(FPS)
     for event in pygame.event.get():
