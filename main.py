@@ -22,7 +22,7 @@ YELLOW = (255, 255, 0)
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space difficulties")
+pygame.display.set_caption("Space Rift")
 clock = pygame.time.Clock()
 
 font_name = pygame.font.match_font('arial')
