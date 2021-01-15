@@ -41,7 +41,7 @@ def newmob():
     all_sprites.add(m)
     mobs.add(m)
 
-
+# полоса здоровья
 def draw_shield_bar(surf, x, y, pct):
     if pct < 0:
         pct = 0
@@ -53,7 +53,7 @@ def draw_shield_bar(surf, x, y, pct):
     pygame.draw.rect(surf, GREEN, fill_rect)
     pygame.draw.rect(surf, WHITE, outline_rect, 2)
 
-
+# вступительный экран
 def show_go_screen():
     screen.blit(background, background_rect)
     draw_text(screen, "Space difficulties", 64, WIDTH / 2, HEIGHT / 4)
