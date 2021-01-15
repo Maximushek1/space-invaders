@@ -3,6 +3,7 @@ import random
 from os import path
 
 img_dir = path.join(path.dirname(__file__), 'img')
+snd_dir = path.join(path.dirname(__file__), 'snd')
 
 WIDTH = 480
 HEIGHT = 600
@@ -118,6 +119,7 @@ class Player(pygame.sprite.Sprite):
                 bullet = Bullet(self.rect.centerx, self.rect.top)
                 all_sprites.add(bullet)
                 bullets.add(bullet)
+                shoot_sound.play()
             if self.power >= 2:
                 bullet1 = Bullet(self.rect.left, self.rect.centery)
                 bullet2 = Bullet(self.rect.right, self.rect.centery)
@@ -125,6 +127,7 @@ class Player(pygame.sprite.Sprite):
                 all_sprites.add(bullet2)
                 bullets.add(bullet1)
                 bullets.add(bullet2)
+                shoot_sound.play()
 
 
 class Mob(pygame.sprite.Sprite):
@@ -251,6 +254,12 @@ for i in range(9):
 powerup_images = {}
 powerup_images['shield'] = pygame.image.load(path.join(img_dir, 'shield_gold.png')).convert()
 powerup_images['gun'] = pygame.image.load(path.join(img_dir, 'bolt_gold.png')).convert()
+shoot_sound = pygame.mixer.Sound(path.join(snd_dir, 'pew.wav'))
+expl_sounds = []
+for snd in ['expl3.wav', 'expl6.wav']:
+    expl_sounds.append(pygame.mixer.Sound(path.join(snd_dir, snd)))
+pygame.mixer.music.load(path.join(snd_dir, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
+pygame.mixer.music.set_volume(0.4)
 
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
@@ -261,6 +270,7 @@ all_sprites.add(player)
 for i in range(8):
     newmob()
 score = 0
+pygame.mixer.music.play(loops=-1)
 
 # Цикл игры
 game_over = True
@@ -295,6 +305,7 @@ while running:
     hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
     for hit in hits:
         score += 50 - hit.radius
+        random.choice(expl_sounds).play()
         expl = Explosion(hit.rect.center, 'lg')
         all_sprites.add(expl)
         if random.random() > 0.9:
