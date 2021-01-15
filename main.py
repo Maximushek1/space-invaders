@@ -56,7 +56,7 @@ def draw_shield_bar(surf, x, y, pct):
 # вступительный экран
 def show_go_screen():
     screen.blit(background, background_rect)
-    draw_text(screen, "Space difficulties", 64, WIDTH / 2, HEIGHT / 4)
+    draw_text(screen, "Space Rift", 54, WIDTH / 2, HEIGHT / 4)
     draw_text(screen, "Left and right arrows to move, Space to fire", 22,
               WIDTH / 2, HEIGHT / 2)
     draw_text(screen, "Press any key to begin", 18, WIDTH / 2, HEIGHT * 3 / 4)
